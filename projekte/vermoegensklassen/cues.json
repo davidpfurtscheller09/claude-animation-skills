@@ -1,0 +1,246 @@
+{
+ "total": 44.28,
+ "endcard": 43.03,
+ "lines": [
+  {
+   "id": "q1",
+   "spk": "opa",
+   "start": 0.0,
+   "segs": [
+    {
+     "t0": 0.0,
+     "t1": 0.437,
+     "text": "Fin"
+    },
+    {
+     "t0": 0.557,
+     "t1": 2.398,
+     "text": "Ab wann ist man eigentlich reich?"
+    }
+   ],
+   "end": 2.398
+  },
+  {
+   "id": "f0",
+   "spk": "finn",
+   "start": 2.598,
+   "segs": [
+    {
+     "t0": 2.598,
+     "t1": 4.395,
+     "text": "Kommt drauf an, welche Liga du meinst."
+    },
+    {
+     "t0": 4.615,
+     "t1": 6.218,
+     "text": "Ich zeige dir die sechs Vermögensklassen"
+    },
+    {
+     "t0": 6.348,
+     "t1": 7.613,
+     "text": "nach diesen Schwellenwerten."
+    }
+   ],
+   "end": 7.613
+  },
+  {
+   "id": "f1",
+   "spk": "finn",
+   "start": 7.813,
+   "segs": [
+    {
+     "t0": 7.813,
+     "t1": 8.547,
+     "text": "Stufe 1"
+    },
+    {
+     "t0": 8.677,
+     "t1": 9.63,
+     "text": "Mass affluent."
+    },
+    {
+     "t0": 9.76,
+     "t1": 11.612,
+     "text": "Ab 100.000 Euro bist du wohlhabend."
+    },
+    {
+     "t0": 11.742,
+     "t1": 12.984,
+     "text": "Aber noch kein Millionär."
+    }
+   ],
+   "end": 12.984
+  },
+  {
+   "id": "f2",
+   "spk": "finn",
+   "start": 13.184,
+   "segs": [
+    {
+     "t0": 13.184,
+     "t1": 14.163,
+     "text": "Ab einer Million!"
+    },
+    {
+     "t0": 14.293,
+     "t1": 15.274,
+     "text": "HNVI"
+    },
+    {
+     "t0": 15.404,
+     "t1": 16.721,
+     "text": "High net worth individual."
+    },
+    {
+     "t0": 16.851,
+     "t1": 18.195,
+     "text": "Willkommen im Millionärsklub!"
+    }
+   ],
+   "end": 18.195
+  },
+  {
+   "id": "f3",
+   "spk": "finn",
+   "start": 18.395,
+   "segs": [
+    {
+     "t0": 18.395,
+     "t1": 19.282,
+     "text": "Ab 5 Millionen."
+    },
+    {
+     "t0": 19.412,
+     "t1": 20.508,
+     "text": "Sehr hohe Netwurse"
+    },
+    {
+     "t0": 20.638,
+     "t1": 21.652,
+     "text": "von fachamillionär."
+    }
+   ],
+   "end": 21.652
+  },
+  {
+   "id": "f4",
+   "spk": "finn",
+   "start": 21.852,
+   "segs": [
+    {
+     "t0": 21.852,
+     "t1": 22.995,
+     "text": "Ab 30 Millionen."
+    },
+    {
+     "t0": 23.125,
+     "t1": 24.202,
+     "text": "Ultra High Net Worth."
+    },
+    {
+     "t0": 24.332,
+     "t1": 25.99,
+     "text": "Jetzt wird es richtig exklusiv."
+    }
+   ],
+   "end": 25.99
+  },
+  {
+   "id": "f5",
+   "spk": "finn",
+   "start": 26.19,
+   "segs": [
+    {
+     "t0": 26.19,
+     "t1": 27.191,
+     "text": "Ab 100 Millionen."
+    },
+    {
+     "t0": 27.321,
+     "t1": 28.234,
+     "text": "CentiMillionaire."
+    },
+    {
+     "t0": 28.364,
+     "t1": 29.548,
+     "text": "Hundertfacher Millionär."
+    }
+   ],
+   "end": 29.548
+  },
+  {
+   "id": "f6",
+   "spk": "finn",
+   "start": 29.748,
+   "segs": [
+    {
+     "t0": 29.748,
+     "t1": 30.633,
+     "text": "und ganz oben."
+    },
+    {
+     "t0": 31.033,
+     "t1": 32.485,
+     "text": "Ab einer Milliarde Euro."
+    },
+    {
+     "t0": 32.615,
+     "t1": 33.361,
+     "text": "Billionär."
+    },
+    {
+     "t0": 33.491,
+     "t1": 34.755,
+     "text": "Tausendfacher Millionär."
+    }
+   ],
+   "end": 34.755
+  },
+  {
+   "id": "q2",
+   "spk": "opa",
+   "start": 34.955,
+   "segs": [
+    {
+     "t0": 34.955,
+     "t1": 36.274,
+     "text": "Eine Milliarde?"
+    }
+   ],
+   "end": 36.274
+  },
+  {
+   "id": "f7",
+   "spk": "finn",
+   "start": 36.474,
+   "segs": [
+    {
+     "t0": 36.474,
+     "t1": 36.957,
+     "text": "Wichtig!"
+    },
+    {
+     "t0": 37.087,
+     "t1": 38.413,
+     "text": "Gemeint ist Nettovermögen"
+    },
+    {
+     "t0": 38.543,
+     "t1": 39.302,
+     "text": "Nicht bargeld."
+    },
+    {
+     "t0": 39.432,
+     "t1": 40.808,
+     "text": "Die Stapel sind nur ein Symbol"
+    },
+    {
+     "t0": 41.108,
+     "t1": 42.683,
+     "text": "Folge mir für mehr Finanzwissen!"
+    }
+   ],
+   "end": 42.683
+  }
+ ]
+}

@@ -65,21 +65,21 @@
   }
  ],
  "starts": [
-  7.3,
-  12.6,
-  17.0,
-  20.6,
-  25.0,
-  30.0
+  7.71,
+  13.08,
+  18.29,
+  21.75,
+  26.09,
+  30.73
  ],
- "end": 44.0,
+ "end": 44.28,
  "intro": {
   "kicker": "FINN ERKLÄRT",
   "title": "DIE <em>6</em><br>VERMÖGENS-<br>KLASSEN",
   "quote": "„Ab wann ist man eigentlich reich?“"
  },
  "outro": {
-  "at": 34.8,
+  "at": 36.37,
   "title": "NETTOVERMÖGEN <span>≠</span><br>BARGELD",
   "text": "Die Geldstapel sind eine symbolische Darstellung.<br><br><b style=\"color:#1c2b4a;font-weight:700\">Folge für mehr Finanzwissen!</b>"
  },
