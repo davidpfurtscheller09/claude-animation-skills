@@ -61,6 +61,9 @@ SOUNDS = {
     'paper_riffle_long': lambda: _riffle(1.0, dense=1.6),
     # leiser Luftzug: Kamerafahrt
     'whoosh_soft': lambda: _whoosh(1.1),
+    # heller, edler Klang (zwei Glocken-Teiltöne mit Raum): die Milliarde
+    'shimmer': lambda: norm(room(sum(a * np.sin(2 * np.pi * f * t(2.2)) * env(2.2, .02, d) for f, a, d in
+                                     ((880, 1, .9), (1318.5, .7, .7), (1760, .45, .5), (2637, .25, .35))), .5, .35), .32),
     # tiefer weicher Bass: 100 Mio.
     'bass_soft': lambda: norm(sweep(70, 42, .9, 1.2) * env(.9, .01, .35), .55),
 }

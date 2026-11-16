@@ -47,13 +47,24 @@ def events(spec):
         ev.append((t0 + .25, 'pop_soft', .55, 1.0, f'Person {st[i]["person"]} erscheint'))
         ev.append((t0 + .55, 'paper_riffle_long' if i >= 2 else 'paper_riffle', .45 + .35 * grow, 1.0, 'Stapel wächst'))
         ev.append((t0 + .75, 'click_tiny', .5, 1.0, 'Hinweislinie'))
-        ev.append((t0 + 1.0, 'pop_deep', .55 + .4 * grow, 1.0 - .22 * grow, f'Stapel setzt auf ({st[i]["amount"]:,} €)'.replace(',', '.')))
-        if i == n - 1:
-            ev.append((t0 + 1.0, 'bass_soft', .7, 1.0, 'größter Stapel'))
+        ev.append((t0 + .55 + (st[i].get('count_seconds') or 1.0) * .45, 'pop_deep', .55 + .4 * grow, 1.0 - .22 * grow, f'Stapel setzt auf ({st[i]["amount"]:,} €)'.replace(',', '.')))
+        if st[i]['amount'] >= 30_000_000:                 # from UHNWI on: a deeper low end with every stage
+            deep = min(1.0, (st[i]['amount'] / 30_000_000) ** .25 / 2.4)
+            ev.append((t0 + 1.0, 'bass_soft', .45 + .4 * deep, 1.0 - .12 * deep, f'tiefer Bass ({st[i]["title"]})'))
+        if st[i]['amount'] >= 1_000_000_000:              # the billion: powerful but elegant
+            ev.append((t0 + 1.05, 'shimmer', .8, 1.0, 'Milliarde: edler Klang'))
+            ev.append((t0 + .55 + (st[i].get('count_seconds') or 1.0), 'pop_deep', .9, .62, 'Milliarde erreicht'))
         ev.append((t0 + 1.35, 'pop_mid', .6, 1.0, f'Skill-Karte „{st[i]["title"]}“'))
-        for k in range(len(st[i]['skills'])):
-            ev.append((t0 + 1.6 + .12 * k, 'click_tiny', .45, 1.0 + .06 * k, f'Skill „{st[i]["skills"][k]}“'))
-        ev.append((t0 + 1.55, 'tick_soft', .5, 1.0 + .03 * i, 'Zähler am Ziel'))
+        lines = st[i].get('skills') or [st[i].get('subtitle', ''), st[i].get('range', '')]
+        for k, line in enumerate(lines):
+            ev.append((t0 + 1.6 + .12 * k, 'click_tiny', .45, 1.0 + .06 * k, f'Kartenzeile „{line}“'))
+        ev.append((t0 + .6 + (st[i].get('count_seconds') or 1.0), 'tick_soft', .5, 1.0 + .03 * i, 'Zähler am Ziel'))
+    if spec.get('intro'):
+        ev.append((.05, 'pop_mid', .55, .9, 'Titel erscheint'))
+        ev.append((.5, 'click_tiny', .5, 1.0, 'Frage erscheint'))
+        ev.append((starts[0] - .5, 'whoosh_soft', .5, 1.1, 'Titel geht, Stufe 1 kommt'))
+    if spec.get('outro'):
+        ev.append((spec['outro']['at'] + .2, 'pop_mid', .55, .85, 'Schlusssatz: Nettovermögen ≠ Bargeld'))
     return sorted(ev)
 
 

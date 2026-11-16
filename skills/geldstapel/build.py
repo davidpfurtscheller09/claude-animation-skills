@@ -20,7 +20,7 @@ STAGES = [
 ]
 DEFAULTS = {'stages': STAGES, 'scale': 1.35, 'stage_seconds': 3.4,
             'note': 'Beispielhafte Einordnung – keine Garantie für Einkommen oder Vermögen.',
-            'starts': None, 'end': None}   # optional: stage start times and end, laid onto a voice-over
+            'starts': None, 'end': None, 'intro': None, 'outro': None}   # optional: stage start times and end, laid onto a voice-over
 
 
 def duration(spec):
@@ -36,7 +36,7 @@ def check(spec):
         for k in ('person', 'stack'):
             if not (HERE / 'assets' / f'{k}_{s[k]}.png').exists():
                 sys.exit(f'spec: assets/{k}_{s[k]}.png is missing')
-        if len(' · '.join(s['skills'])) > 44:
+        if len(' · '.join(s.get('skills', []))) > 44:
             print(f'note: the skills of "{s["title"]}" are long and may not fit the card')
 
 

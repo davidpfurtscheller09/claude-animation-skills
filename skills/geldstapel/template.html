@@ -23,9 +23,24 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
 .card h2{font-weight:700;font-size:48px;letter-spacing:-.01em;line-height:1.1}
 .card p{font-weight:500;font-size:29px;color:var(--mute);margin-top:12px;white-space:nowrap}
 .card p span{display:inline-block}
+.card.typo{height:200px;padding:0 48px;gap:0;display:block;padding-top:30px}
+.card.typo .rule{position:absolute;left:0;top:44px;width:6px;height:112px;border-radius:0 6px 6px 0;background:var(--gold)}
+.card.typo h2{font-family:'Inter Tight',sans-serif;font-weight:800;font-size:54px;letter-spacing:.01em}
+.card.typo .sub{font-weight:600;font-size:30px;color:var(--mute);margin-top:6px}
+.card.typo .range{font-weight:600;font-size:32px;color:var(--ink);margin-top:10px}
+.card.typo .range b{font-weight:700}
+.intro{position:absolute;left:60px;width:960px;top:560px;text-align:center}
+.intro .kick{font-weight:700;font-size:26px;letter-spacing:.32em;color:var(--mute)}
+.intro .title{font-family:'Inter Tight',sans-serif;font-weight:800;font-size:104px;line-height:1.02;letter-spacing:-.02em;margin-top:26px}
+.intro .title em{font-style:normal;color:var(--gold)}
+.intro .quote{font-weight:500;font-size:40px;color:var(--mute);margin-top:44px}
+.outro{position:absolute;left:60px;width:960px;top:1185px;text-align:center}
+.outro h3{font-family:'Inter Tight',sans-serif;font-weight:800;font-size:58px;letter-spacing:-.01em}
+.outro h3 span{color:var(--gold)}
+.outro p{font-weight:500;font-size:30px;color:var(--mute);margin-top:16px}
 .dots{position:absolute;left:0;width:1080px;top:150px;display:flex;justify-content:center;gap:18px}
 .dots i{display:block;width:14px;height:14px;border-radius:50%;background:#dfe3ea}
-.note{position:absolute;left:60px;width:960px;top:1430px;text-align:center;font-weight:500;font-size:24px;color:#8a93a3}
+.note{position:absolute;left:60px;width:960px;top:1430px;text-align:center;font-weight:500;font-size:24px;line-height:1.4;color:#8a93a3}
 .floor{position:absolute;left:0;width:1080px;height:2px;background:linear-gradient(90deg,rgba(201,206,216,0),rgba(201,206,216,.9) 20%,rgba(201,206,216,.9) 80%,rgba(201,206,216,0))}
 </style></head>
 <body>
@@ -33,6 +48,8 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
   <div class="dots" id="dots"></div>
   <div id="world"></div>
   <div class="note" id="note"></div>
+  <div class="intro" id="intro"></div>
+  <div class="outro" id="outro"></div>
 </div>
 <script src="vendor/gsap.min.js"></script>
 <script>
@@ -58,16 +75,26 @@ const img = (name, cls) => { const i = document.createElement('img'); i.src = AS
 const sizeOf = name => { const m = /^data:[^;]+;w=(\d+);h=(\d+);/.exec(ASSETS[name]); return m ? [+m[1], +m[2]] : [100, 100]; };
 
 // ---------- components ----------
-function Person(stage, name) {
+function Person(stage, name, K, mirror) {
   const [w, h] = sizeOf(name); const el = img(name, 'person');
-  Object.assign(el.style, { left: PERSON_X + 'px', top: (FLOOR - h * K) + 'px', width: w * K + 'px', height: h * K + 'px' });
+  Object.assign(el.style, { left: (PERSON_X + (K < 1 ? 60 : 0)) + 'px', top: (FLOOR - h * K) + 'px', width: w * K + 'px', height: h * K + 'px' });
+  if (mirror) el.style.transform = 'scaleX(-1)';
   stage.appendChild(el); gsap.set(el, { autoAlpha: 0, y: 30 }); return el;
 }
-function Stack(stage, name) {
-  const [w, h] = sizeOf(name); const el = img(name, 'stack');
-  const x = STACK_X + (690 - w * K) / 2, top = FLOOR - h * K + 6;
-  Object.assign(el.style, { left: x + 'px', top: top + 'px', width: w * K + 'px', height: h * K + 'px', transformOrigin: '50% 100%' });
-  stage.appendChild(el); return { el, cx: x + w * K / 2, top };
+function Stack(stage, name, K, grid) {
+  // one stack image, or a grid of copies (cols x rows, back rows drawn first and offset up/right) for very large amounts
+  const [w, h] = sizeOf(name); const cols = grid ? grid[0] : 1, rows = grid ? grid[1] : 1, layers = grid && grid[2] ? grid[2] : 1;
+  const sw = w * K, sh = h * K, dx = sw * .9, rx = sw * .22, ry = sh * .38;
+  const lz = sh * .72;     // a layer sits on the one below (the top face stays visible)
+  const W = (cols - 1) * dx + (rows - 1) * rx + sw, H = (rows - 1) * ry + (layers - 1) * lz + sh;
+  const box = document.createElement('div'); box.className = 'stack';
+  const x = STACK_X + (690 - W) / 2, top = FLOOR - H + 6;
+  Object.assign(box.style, { left: x + 'px', top: top + 'px', width: W + 'px', height: H + 'px', transformOrigin: '50% 100%' });
+  for (let r = rows - 1; r >= 0; r--) for (let l = 0; l < layers; l++) for (let c = 0; c < cols; c++) {
+    const el = img(name, ''); Object.assign(el.style, { position: 'absolute', left: (c * dx + r * rx) + 'px', top: (H - sh - r * ry - l * lz) + 'px', width: sw + 'px', height: sh + 'px' });
+    box.appendChild(el);
+  }
+  stage.appendChild(box); return { el: box, cx: x + W / 2, top };
 }
 function Amount(stage, cx, stackTop) {
   const el = document.createElement('div'); el.className = 'amount';
@@ -79,6 +106,11 @@ function Amount(stage, cx, stackTop) {
 }
 function SkillCard(stage, s) {
   const el = document.createElement('div'); el.className = 'card';
+  if (s.range) {     // typographic class card: name, meaning, range, no icon
+    el.className = 'card typo';
+    el.innerHTML = `<div class="rule"></div><h2>${s.title}</h2><div class="sub">${s.subtitle || ''}</div><div class="range">${s.range}</div>`;
+    stage.appendChild(el); gsap.set(el, { autoAlpha: 0, y: 40 }); return { el, words: el.querySelectorAll('.sub,.range') };
+  }
   el.innerHTML = `<div class="ic"><svg viewBox="0 0 48 48" fill="none" stroke="#1c2b4a" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[s.icon] || ''}</svg></div><div class="sep"></div>
     <div><h2>${s.title}</h2><p>${s.skills.map(k => `<span>${k}</span>`).join(' · ')}</p></div>`;
   stage.appendChild(el); gsap.set(el, { autoAlpha: 0, y: 40 }); return { el, words: el.querySelectorAll('p span') };
@@ -92,8 +124,9 @@ let prev = 0;
 SPEC.stages.forEach((s, i) => {
   const stage = document.createElement('div'); stage.className = 'stage'; stage.style.left = (i * STAGE_W) + 'px'; world.appendChild(stage);
   const floor = document.createElement('div'); floor.className = 'floor'; floor.style.top = FLOOR + 'px'; stage.appendChild(floor);
-  const person = Person(stage, 'person_' + s.person);
-  const stack = Stack(stage, 'stack_' + s.stack);
+  const Ki = s.scale || K;
+  const person = Person(stage, 'person_' + s.person, Ki, s.mirror);
+  const stack = Stack(stage, 'stack_' + s.stack, Ki, s.grid);
   const amt = Amount(stage, stack.cx, stack.top);
   const card = SkillCard(stage, s);
   const t0 = SPEC.starts ? SPEC.starts[i] : T0 + i * D;          // optional: stage starts laid onto the voice
@@ -101,20 +134,37 @@ SPEC.stages.forEach((s, i) => {
   tl.to(dotEls[i], { backgroundColor: '#1c2b4a', scale: 1.25, duration: .3 }, t0 + .2);
   tl.to(person, { autoAlpha: 1, y: 0, duration: .55, ease: 'power3.out' }, t0 + .25);
   // the stack builds up from the floor, then settles
-  tl.fromTo(stack.el, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.0, ease: 'power3.out' }, t0 + .55);
+  tl.fromTo(stack.el, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: s.count_seconds || 1.0, ease: 'power3.out' }, t0 + .55);   // grows in step with the counter
   tl.fromTo(stack.el, { scaleY: .94 }, { scaleY: 1, duration: 1.1, ease: 'back.out(2)' }, t0 + .55);
   tl.fromTo(amt.lead, { autoAlpha: 1, scaleY: 0 }, { scaleY: 1, duration: .45, ease: 'power2.out' }, t0 + .75);
   tl.to(amt.el, { autoAlpha: 1, duration: .2 }, t0 + .6);
   const c = { v: prev }; amt.el.textContent = fmt(prev);
-  tl.to(c, { v: s.amount, duration: 1.0, ease: 'power3.out', onUpdate: () => { amt.el.textContent = fmt(c.v); } }, t0 + .6);
+  tl.to(c, { v: s.amount, duration: s.count_seconds || 1.0, ease: 'power3.out', onUpdate: () => { amt.el.textContent = fmt(c.v); } }, t0 + .6);
   tl.to(card.el, { autoAlpha: 1, y: 0, duration: .5, ease: 'power3.out' }, t0 + 1.35);
   tl.fromTo(card.words, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .3, stagger: .12 }, t0 + 1.6);
   const holdEnd = SPEC.starts ? (i < n - 1 ? SPEC.starts[i + 1] - .35 : __DURATION__) : (i === n - 1 ? t0 + 1.2 + D - .3 : t0 + D - .35);
   tl.to(world, { x: '-=46', duration: Math.max(.1, holdEnd - t0 - 1.2), ease: 'none' }, t0 + 1.2);   // slow drift while the stage holds, no zoom
   prev = s.amount;
 });
-const note = document.getElementById('note'); note.textContent = SPEC.note || '';
-gsap.set(note, { autoAlpha: 0 }); tl.to(note, { autoAlpha: 1, duration: .5 }, T0 + 1.8);
+const note = document.getElementById('note'); note.innerHTML = (SPEC.note || '').replace(/\n/g, '<br>');
+const firstStart = SPEC.starts ? SPEC.starts[0] : T0;
+gsap.set(note, { autoAlpha: 0 }); tl.to(note, { autoAlpha: 1, duration: .5 }, SPEC.starts ? firstStart + 1.5 : T0 + 1.8);
+if (SPEC.intro) {               // title screen while the question is asked
+  const it = document.getElementById('intro'), I = SPEC.intro;
+  it.innerHTML = `<div class="kick">${I.kicker || ''}</div><div class="title">${I.title}</div><div class="quote">${I.quote || ''}</div>`;
+  const parts = it.children; gsap.set(parts, { autoAlpha: 0, y: 24 });
+  tl.to(parts[0], { autoAlpha: 1, y: 0, duration: .5, ease: 'power3.out' }, 0);
+  tl.to(parts[1], { autoAlpha: 1, y: 0, duration: .6, ease: 'power3.out' }, .1);
+  tl.to(parts[2], { autoAlpha: 1, y: 0, duration: .5, ease: 'power3.out' }, .45);
+  tl.fromTo(parts[1], { scale: 1 }, { scale: 1.04, duration: firstStart - .4, ease: 'none' }, .1);
+  tl.to(it, { autoAlpha: 0, y: -40, duration: .45, ease: 'power2.in' }, firstStart - .45);
+}
+if (SPEC.outro) {               // closing line over the last stage
+  const ot = document.getElementById('outro'), O = SPEC.outro, last = world.lastChild;
+  ot.innerHTML = `<h3>${O.title}</h3><p>${O.text || ''}</p>`; gsap.set(ot.children, { autoAlpha: 0, y: 24 });
+  tl.to(last.querySelectorAll('.card'), { autoAlpha: 0, y: 30, duration: .35 }, O.at - .1);
+  tl.to(ot.children, { autoAlpha: 1, y: 0, duration: .5, stagger: .25, ease: 'power3.out' }, O.at + .2);
+}
 
 tl.set({}, {}, __DURATION__);
 window.__timelines = window.__timelines || {};
