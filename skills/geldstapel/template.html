@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8">
+<style>
+@font-face{font-family:'Inter';font-weight:500;src:url(fonts/inter-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-weight:600;src:url(fonts/inter-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-weight:700;src:url(fonts/inter-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-weight:800;src:url(fonts/inter-tight-latin-800-normal.woff2) format('woff2')}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#ffffff;--ink:#1c2b4a;--mute:#5d6678;--line:#c9ced8;--gold:#e7b21c}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:'Inter',sans-serif;color:var(--ink)}
+#world{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.stage{position:absolute;top:0;width:1080px;height:1920px}
+.person,.stack{position:absolute;display:block}
+.stack{clip-path:inset(100% 0 0 0)}
+.amount{position:absolute;font-family:'Inter Tight',sans-serif;font-weight:800;font-size:92px;letter-spacing:-.02em;white-space:nowrap;text-align:center;font-variant-numeric:tabular-nums}
+.lead{position:absolute;width:3px;background:var(--ink)}
+.lead:after{content:'';position:absolute;left:-7px;bottom:-8px;width:17px;height:17px;border-radius:50%;background:var(--ink)}
+.card{position:absolute;left:60px;top:1185px;width:960px;height:190px;display:flex;align-items:center;gap:34px;padding:0 40px;border:2px solid #e3e6ec;border-radius:28px;background:#fff;box-shadow:0 18px 40px rgba(28,43,74,.08)}
+.card .ic{width:104px;height:104px;flex:none;border-radius:24px;background:#f2f4f8;display:flex;align-items:center;justify-content:center}
+.card .ic svg{width:66px;height:66px}
+.card .sep{width:2px;height:110px;background:#e3e6ec;flex:none}
+.card h2{font-weight:700;font-size:48px;letter-spacing:-.01em;line-height:1.1}
+.card p{font-weight:500;font-size:29px;color:var(--mute);margin-top:12px;white-space:nowrap}
+.card p span{display:inline-block}
+.dots{position:absolute;left:0;width:1080px;top:150px;display:flex;justify-content:center;gap:18px}
+.dots i{display:block;width:14px;height:14px;border-radius:50%;background:#dfe3ea}
+.note{position:absolute;left:60px;width:960px;top:1430px;text-align:center;font-weight:500;font-size:24px;color:#8a93a3}
+.floor{position:absolute;left:0;width:1080px;height:2px;background:linear-gradient(90deg,rgba(201,206,216,0),rgba(201,206,216,.9) 20%,rgba(201,206,216,.9) 80%,rgba(201,206,216,0))}
+</style></head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="__DURATION__" data-fps="30" data-width="1080" data-height="1920">
+  <div class="dots" id="dots"></div>
+  <div id="world"></div>
+  <div class="note" id="note"></div>
+</div>
+<script src="vendor/gsap.min.js"></script>
+<script>
+(function () {
+const SPEC = __SPEC__;
+const ASSETS = __ASSETS__;            // filled in by build.py: name -> data URI
+const gsap = window.gsap;
+const tl = gsap.timeline({ paused: true });
+const root = document.getElementById('root'), world = document.getElementById('world');
+
+// layout (1080 x 1920, white): one stage per screen width, the camera moves left from stage to stage
+const FLOOR = 1100, K = SPEC.scale, PERSON_X = 95, STACK_X = 270, STAGE_W = 1080;
+const D = SPEC.stage_seconds, T0 = 0.3;
+
+const ICONS = {
+  cap: '<path d="M4 12l20-8 20 8-20 8z"/><path d="M12 15.5v8c3.5 3.5 20.5 3.5 24 0v-8"/><path d="M44 12v10"/>',
+  chart: '<path d="M6 42h36"/><rect x="9" y="28" width="7" height="12"/><rect x="21" y="22" width="7" height="18"/><rect x="33" y="14" width="7" height="26"/><path d="M8 20l12-8 8 5 14-11"/><path d="M36 6h6v6"/>',
+  team: '<circle cx="24" cy="15" r="6"/><path d="M13 38c0-7 5-11 11-11s11 4 11 11"/><circle cx="10" cy="19" r="4.5"/><path d="M2 36c0-5 3.5-8 8-8"/><circle cx="38" cy="19" r="4.5"/><path d="M46 36c0-5-3.5-8-8-8"/>',
+  rocket: '<path d="M28 8c6-3 11-3 12-2 1 1 1 6-2 12L26 30l-8-8z"/><circle cx="31" cy="15" r="3"/><path d="M18 22l-7 1-5 5 8 1M26 30l-1 7-5 5-1-8"/><path d="M14 34c-4 1-6 4-7 8 4-1 7-3 8-7"/>',
+};
+const fmt = v => Math.round(v).toLocaleString('de-DE') + ' €';
+const img = (name, cls) => { const i = document.createElement('img'); i.src = ASSETS[name]; i.className = cls; return i; };
+const sizeOf = name => { const m = /^data:[^;]+;w=(\d+);h=(\d+);/.exec(ASSETS[name]); return m ? [+m[1], +m[2]] : [100, 100]; };
+
+// ---------- components ----------
+function Person(stage, name) {
+  const [w, h] = sizeOf(name); const el = img(name, 'person');
+  Object.assign(el.style, { left: PERSON_X + 'px', top: (FLOOR - h * K) + 'px', width: w * K + 'px', height: h * K + 'px' });
+  stage.appendChild(el); gsap.set(el, { autoAlpha: 0, y: 30 }); return el;
+}
+function Stack(stage, name) {
+  const [w, h] = sizeOf(name); const el = img(name, 'stack');
+  const x = STACK_X + (690 - w * K) / 2, top = FLOOR - h * K + 6;
+  Object.assign(el.style, { left: x + 'px', top: top + 'px', width: w * K + 'px', height: h * K + 'px', transformOrigin: '50% 100%' });
+  stage.appendChild(el); return { el, cx: x + w * K / 2, top };
+}
+function Amount(stage, cx, stackTop) {
+  const el = document.createElement('div'); el.className = 'amount';
+  const y = Math.min(stackTop - 230, 680);
+  Object.assign(el.style, { left: (cx - 420) + 'px', width: '840px', top: y + 'px' });
+  const lead = document.createElement('div'); lead.className = 'lead';
+  Object.assign(lead.style, { left: (cx - 1.5) + 'px', top: (y + 118) + 'px', height: (stackTop + 22 - (y + 118)) + 'px', transformOrigin: '50% 0' });
+  stage.appendChild(lead); stage.appendChild(el); gsap.set([el, lead], { autoAlpha: 0 }); return { el, lead };
+}
+function SkillCard(stage, s) {
+  const el = document.createElement('div'); el.className = 'card';
+  el.innerHTML = `<div class="ic"><svg viewBox="0 0 48 48" fill="none" stroke="#1c2b4a" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[s.icon] || ''}</svg></div><div class="sep"></div>
+    <div><h2>${s.title}</h2><p>${s.skills.map(k => `<span>${k}</span>`).join(' · ')}</p></div>`;
+  stage.appendChild(el); gsap.set(el, { autoAlpha: 0, y: 40 }); return { el, words: el.querySelectorAll('p span') };
+}
+
+// ---------- build the stages ----------
+const n = SPEC.stages.length;
+const dots = document.getElementById('dots');
+const dotEls = SPEC.stages.map(() => { const i = document.createElement('i'); dots.appendChild(i); return i; });
+let prev = 0;
+SPEC.stages.forEach((s, i) => {
+  const stage = document.createElement('div'); stage.className = 'stage'; stage.style.left = (i * STAGE_W) + 'px'; world.appendChild(stage);
+  const floor = document.createElement('div'); floor.className = 'floor'; floor.style.top = FLOOR + 'px'; stage.appendChild(floor);
+  const person = Person(stage, 'person_' + s.person);
+  const stack = Stack(stage, 'stack_' + s.stack);
+  const amt = Amount(stage, stack.cx, stack.top);
+  const card = SkillCard(stage, s);
+  const t0 = SPEC.starts ? SPEC.starts[i] : T0 + i * D;          // optional: stage starts laid onto the voice
+  if (i > 0) tl.to(world, { x: -i * STAGE_W, duration: 1.15, ease: 'power2.inOut' }, t0 - .35);   // camera moves left to the next stage
+  tl.to(dotEls[i], { backgroundColor: '#1c2b4a', scale: 1.25, duration: .3 }, t0 + .2);
+  tl.to(person, { autoAlpha: 1, y: 0, duration: .55, ease: 'power3.out' }, t0 + .25);
+  // the stack builds up from the floor, then settles
+  tl.fromTo(stack.el, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.0, ease: 'power3.out' }, t0 + .55);
+  tl.fromTo(stack.el, { scaleY: .94 }, { scaleY: 1, duration: 1.1, ease: 'back.out(2)' }, t0 + .55);
+  tl.fromTo(amt.lead, { autoAlpha: 1, scaleY: 0 }, { scaleY: 1, duration: .45, ease: 'power2.out' }, t0 + .75);
+  tl.to(amt.el, { autoAlpha: 1, duration: .2 }, t0 + .6);
+  const c = { v: prev }; amt.el.textContent = fmt(prev);
+  tl.to(c, { v: s.amount, duration: 1.0, ease: 'power3.out', onUpdate: () => { amt.el.textContent = fmt(c.v); } }, t0 + .6);
+  tl.to(card.el, { autoAlpha: 1, y: 0, duration: .5, ease: 'power3.out' }, t0 + 1.35);
+  tl.fromTo(card.words, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .3, stagger: .12 }, t0 + 1.6);
+  const holdEnd = SPEC.starts ? (i < n - 1 ? SPEC.starts[i + 1] - .35 : __DURATION__) : (i === n - 1 ? t0 + 1.2 + D - .3 : t0 + D - .35);
+  tl.to(world, { x: '-=46', duration: Math.max(.1, holdEnd - t0 - 1.2), ease: 'none' }, t0 + 1.2);   // slow drift while the stage holds, no zoom
+  prev = s.amount;
+});
+const note = document.getElementById('note'); note.textContent = SPEC.note || '';
+gsap.set(note, { autoAlpha: 0 }); tl.to(note, { autoAlpha: 1, duration: .5 }, T0 + 1.8);
+
+tl.set({}, {}, __DURATION__);
+window.__timelines = window.__timelines || {};
+window.__timelines["main"] = tl;
+})();
+</script>
+</body></html>
