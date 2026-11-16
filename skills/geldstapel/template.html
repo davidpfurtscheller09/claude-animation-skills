@@ -40,6 +40,15 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
 .outro p{font-weight:500;font-size:30px;color:var(--mute);margin-top:16px}
 .dots{position:absolute;left:0;width:1080px;top:150px;display:flex;justify-content:center;gap:18px}
 .dots i{display:block;width:14px;height:14px;border-radius:50%;background:#dfe3ea}
+.finn-space .card.typo{left:430px;top:930px;width:600px;height:206px;padding:28px 36px 0 40px}
+.finn-space .card.typo h2{font-size:46px}
+.finn-space .card.typo .sub{font-size:27px}
+.finn-space .card.typo .range{font-size:29px}
+.finn-space .note{left:430px;width:600px;top:1170px;text-align:left;font-size:21px}
+.finn-space .outro{left:430px;width:600px;top:930px;text-align:left}
+.finn-space .outro h3{font-size:52px;line-height:1.08}
+.finn-space .outro p{font-size:28px}
+.finn-space .intro{top:380px}
 .note{position:absolute;left:60px;width:960px;top:1430px;text-align:center;font-weight:500;font-size:24px;line-height:1.4;color:#8a93a3}
 .floor{position:absolute;left:0;width:1080px;height:2px;background:linear-gradient(90deg,rgba(201,206,216,0),rgba(201,206,216,.9) 20%,rgba(201,206,216,.9) 80%,rgba(201,206,216,0))}
 </style></head>
@@ -61,7 +70,8 @@ const tl = gsap.timeline({ paused: true });
 const root = document.getElementById('root'), world = document.getElementById('world');
 
 // layout (1080 x 1920, white): one stage per screen width, the camera moves left from stage to stage
-const FLOOR = 1100, K = SPEC.scale, PERSON_X = 95, STACK_X = 270, STAGE_W = 1080;
+if (SPEC.finn_space) root.classList.add('finn-space');
+const FLOOR = SPEC.finn_space ? 850 : 1100, K = SPEC.scale, PERSON_X = 95, STACK_X = 270, STAGE_W = 1080;
 const D = SPEC.stage_seconds, T0 = 0.3;
 
 const ICONS = {
@@ -98,7 +108,7 @@ function Stack(stage, name, K, grid) {
 }
 function Amount(stage, cx, stackTop) {
   const el = document.createElement('div'); el.className = 'amount';
-  const y = Math.min(stackTop - 230, 680);
+  const y = Math.min(stackTop - 230, SPEC.finn_space ? 430 : 680);
   Object.assign(el.style, { left: (cx - 420) + 'px', width: '840px', top: y + 'px' });
   const lead = document.createElement('div'); lead.className = 'lead';
   Object.assign(lead.style, { left: (cx - 1.5) + 'px', top: (y + 118) + 'px', height: (stackTop + 22 - (y + 118)) + 'px', transformOrigin: '50% 0' });
@@ -164,6 +174,7 @@ if (SPEC.outro) {               // closing line over the last stage
   ot.innerHTML = `<h3>${O.title}</h3><p>${O.text || ''}</p>`; gsap.set(ot.children, { autoAlpha: 0, y: 24 });
   tl.to(last.querySelectorAll('.card'), { autoAlpha: 0, y: 30, duration: .35 }, O.at - .1);
   tl.to(ot.children, { autoAlpha: 1, y: 0, duration: .5, stagger: .25, ease: 'power3.out' }, O.at + .2);
+  if (SPEC.finn_space) tl.to(note, { y: 150, duration: .4, ease: 'power2.inOut' }, O.at - .1);   // the note makes room for the closing lines
 }
 
 tl.set({}, {}, __DURATION__);

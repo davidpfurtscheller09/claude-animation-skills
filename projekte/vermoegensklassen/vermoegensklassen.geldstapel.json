@@ -1,0 +1,88 @@
+{
+ "stages": [
+  {
+   "amount": 100000,
+   "person": 1,
+   "stack": 1,
+   "title": "MASS AFFLUENT",
+   "subtitle": "Wohlhabend",
+   "range": "100.000 € bis unter 1 Mio. €"
+  },
+  {
+   "amount": 1000000,
+   "person": 2,
+   "stack": 2,
+   "title": "HNWI",
+   "subtitle": "High-Net-Worth Individual",
+   "range": "1 Mio. € bis unter 5 Mio. €"
+  },
+  {
+   "amount": 5000000,
+   "person": 3,
+   "stack": 3,
+   "title": "VHNWI",
+   "subtitle": "Very-High-Net-Worth Individual",
+   "range": "5 Mio. € bis unter 30 Mio. €"
+  },
+  {
+   "amount": 30000000,
+   "person": 4,
+   "stack": 4,
+   "title": "UHNWI",
+   "subtitle": "Ultra-High-Net-Worth Individual",
+   "range": "30 Mio. € bis unter 100 Mio. €"
+  },
+  {
+   "amount": 100000000,
+   "person": 1,
+   "mirror": true,
+   "stack": 4,
+   "grid": [
+    2,
+    2
+   ],
+   "scale": 0.64,
+   "title": "CENTIMILLIONAIRE",
+   "subtitle": "Mindestens 100 Millionen €",
+   "range": "100 Mio. € bis unter 1 Mrd. €",
+   "count_seconds": 1.2
+  },
+  {
+   "amount": 1000000000,
+   "person": 3,
+   "mirror": true,
+   "stack": 4,
+   "grid": [
+    4,
+    3,
+    3
+   ],
+   "scale": 0.327,
+   "title": "BILLIONAIRE",
+   "subtitle": "Milliardär",
+   "range": "ab 1 Mrd. €",
+   "count_seconds": 1.6
+  }
+ ],
+ "starts": [
+  7.3,
+  12.6,
+  17.0,
+  20.6,
+  25.0,
+  30.0
+ ],
+ "end": 44.0,
+ "intro": {
+  "kicker": "FINN ERKLÄRT",
+  "title": "DIE <em>6</em><br>VERMÖGENS-<br>KLASSEN",
+  "quote": "„Ab wann ist man eigentlich reich?“"
+ },
+ "outro": {
+  "at": 34.8,
+  "title": "NETTOVERMÖGEN <span>≠</span><br>BARGELD",
+  "text": "Die Geldstapel sind eine symbolische Darstellung.<br><br><b style=\"color:#1c2b4a;font-weight:700\">Folge für mehr Finanzwissen!</b>"
+ },
+ "note": "Vermögenskategorien nach den gezeigten Schwellenwerten · Nettovermögen\nIllustrative Darstellung, nicht maßstabsgetreu",
+ "finn_space": true
+}

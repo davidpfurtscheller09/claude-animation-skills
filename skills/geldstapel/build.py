@@ -20,7 +20,7 @@ STAGES = [
 ]
 DEFAULTS = {'stages': STAGES, 'scale': 1.35, 'stage_seconds': 3.4,
             'note': 'Beispielhafte Einordnung – keine Garantie für Einkommen oder Vermögen.',
-            'starts': None, 'end': None, 'intro': None, 'outro': None}   # optional: stage start times and end, laid onto a voice-over
+            'starts': None, 'end': None, 'intro': None, 'outro': None, 'finn_space': False}   # optional: stage start times and end, laid onto a voice-over
 
 
 def duration(spec):
