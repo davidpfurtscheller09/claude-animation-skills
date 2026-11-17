@@ -1,0 +1,114 @@
+{
+ "stages": [
+  {
+   "amount": 100000,
+   "person": 1,
+   "stack": 1,
+   "title": "MASS AFFLUENT",
+   "subtitle": "Wohlhabend",
+   "range": "100.000 € bis unter 1 Mio. €",
+   "block": [
+    1,
+    1,
+    2
+   ],
+   "scale": 1.35
+  },
+  {
+   "amount": 1000000,
+   "person": 2,
+   "stack": 2,
+   "title": "HNWI",
+   "subtitle": "High-Net-Worth Individual",
+   "range": "1 Mio. € bis unter 5 Mio. €",
+   "block": [
+    2,
+    2,
+    5
+   ],
+   "scale": 1.35
+  },
+  {
+   "amount": 5000000,
+   "person": 3,
+   "stack": 3,
+   "title": "VHNWI",
+   "subtitle": "Very-High-Net-Worth Individual",
+   "range": "5 Mio. € bis unter 30 Mio. €",
+   "block": [
+    5,
+    4,
+    5
+   ],
+   "scale": 1.35
+  },
+  {
+   "amount": 30000000,
+   "person": 4,
+   "stack": 4,
+   "title": "UHNWI",
+   "subtitle": "Ultra-High-Net-Worth Individual",
+   "range": "30 Mio. € bis unter 100 Mio. €",
+   "block": [
+    6,
+    10,
+    10
+   ],
+   "scale": 1.0
+  },
+  {
+   "amount": 100000000,
+   "person": 1,
+   "mirror": true,
+   "stack": 4,
+   "scale": 0.6,
+   "title": "CENTIMILLIONAIRE",
+   "subtitle": "Mindestens 100 Millionen €",
+   "range": "100 Mio. € bis unter 1 Mrd. €",
+   "count_seconds": 1.2,
+   "block": [
+    10,
+    10,
+    20
+   ]
+  },
+  {
+   "amount": 1000000000,
+   "person": 3,
+   "mirror": true,
+   "stack": 4,
+   "scale": 0.3,
+   "title": "BILLIONAIRE",
+   "subtitle": "Milliardär",
+   "range": "ab 1 Mrd. €",
+   "count_seconds": 1.6,
+   "block": [
+    25,
+    20,
+    40
+   ]
+  }
+ ],
+ "starts": [
+  7.71,
+  13.08,
+  18.29,
+  21.75,
+  26.09,
+  30.73
+ ],
+ "end": 44.28,
+ "intro": {
+  "kicker": "FINN ERKLÄRT",
+  "title": "DIE <em>6</em><br>VERMÖGENS-<br>KLASSEN",
+  "quote": "„Ab wann ist man eigentlich reich?“"
+ },
+ "outro": {
+  "at": 36.37,
+  "title": "NETTOVERMÖGEN <span>≠</span><br>BARGELD",
+  "text": "Die Geldstapel sind eine symbolische Darstellung.<br><br><b style=\"color:#000;font-weight:700\">Folge für mehr Finanzwissen!</b>"
+ },
+ "note": "Vermögenskategorien nach den gezeigten Schwellenwerten\nSymbolisch: 1 Block = 50.000 € · nicht maßstabsgetreu",
+ "finn_space": true,
+ "style": "bw"
+}

@@ -31,3 +31,9 @@ Same pipeline as `/minimalistic-graphics`: a spec fills `template.html`, `kit/an
 - White background, lots of space, navy type (#1c2b4a), one gold accent from the bands only.
 - Never claim that skills guarantee a fortune; keep the note line.
 - Assets come from the user's reference image; replace them with higher-resolution PNGs (same names) when available.
+
+## Strict black & white (`"style": "bw"`)
+- Pure white ground, black type, outlines and hatching only: no colour, no grey fills, no gradients.
+- People: `python3 bw_assets.py` turns `person_N.png` into ink drawings `person_N_bw@3x.png` (thick outline, thin inner lines).
+- Money: give each stage `"block": [cols, rows, layers]` and it is drawn as a block of bundles (black band stripe, paper edges, hatched shadow side, the outline draws itself). With one block per fixed amount the volumes are exact, e.g. 1 block = 50.000 € → 2, 20, 100, 600, 2.000, 20.000 blocks.
+- Keep a note that says what one block stands for and that the drawing is not to scale.

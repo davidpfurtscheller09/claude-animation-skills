@@ -49,6 +49,20 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
 .finn-space .outro h3{font-size:52px;line-height:1.08}
 .finn-space .outro p{font-size:28px}
 .finn-space .intro{top:380px}
+.bw{--ink:#000;--mute:#000;--line:#000;--gold:#000}
+.bw .amount{color:#000}
+.bw .lead,.bw .lead:after{background:#000}
+.bw .card{border:2.5px solid #000;box-shadow:none;border-radius:18px}
+.bw .card.typo .rule{background:#000;width:8px}
+.bw .card.typo .sub{color:#000;font-weight:500}
+.bw .note{color:#000;font-weight:400}
+.bw .floor{background:#000;height:2.5px}
+.bw .dots i{background:#fff;border:2px solid #000;box-sizing:border-box}
+.bw .intro .kick,.bw .intro .quote{color:#000}
+.bw .intro .title em{color:#000;text-decoration:underline;text-decoration-thickness:8px;text-underline-offset:10px}
+.bw .outro h3 span{color:#000}
+.bw .outro p{color:#000}
+.linestack{position:absolute;overflow:visible}
 .note{position:absolute;left:60px;width:960px;top:1430px;text-align:center;font-weight:500;font-size:24px;line-height:1.4;color:#8a93a3}
 .floor{position:absolute;left:0;width:1080px;height:2px;background:linear-gradient(90deg,rgba(201,206,216,0),rgba(201,206,216,.9) 20%,rgba(201,206,216,.9) 80%,rgba(201,206,216,0))}
 </style></head>
@@ -71,6 +85,7 @@ const root = document.getElementById('root'), world = document.getElementById('w
 
 // layout (1080 x 1920, white): one stage per screen width, the camera moves left from stage to stage
 if (SPEC.finn_space) root.classList.add('finn-space');
+const BW = SPEC.style === 'bw'; if (BW) root.classList.add('bw');
 const FLOOR = SPEC.finn_space ? 850 : 1100, K = SPEC.scale, PERSON_X = 95, STACK_X = 270, STAGE_W = 1080;
 const D = SPEC.stage_seconds, T0 = 0.3;
 
@@ -106,9 +121,59 @@ function Stack(stage, name, K, grid) {
   }
   stage.appendChild(box); return { el: box, cx: x + W / 2, top };
 }
+const SVGNS = 'http://www.w3.org/2000/svg';
+function LineStack(stage, block, K) {
+  const [cols, rows, layers] = block, bw = 52 * K, bh = 34 * K, dx = 22 * K, dy = 15 * K;
+  const fw = cols * bw, fh = layers * bh, ox = rows * dx, oy = rows * dy, W = fw + ox, H = fh + oy;
+  const x = STACK_X + (690 - W) / 2, top = FLOOR - H;
+  const svg = document.createElementNS(SVGNS, 'svg'); svg.setAttribute('class', 'linestack stack');
+  svg.setAttribute('width', W + 70); svg.setAttribute('height', H + 4); svg.setAttribute('viewBox', `-2 -2 ${W + 70} ${H + 4}`);
+  Object.assign(svg.style, { left: (x - 2) + 'px', top: (top - 2) + 'px', transformOrigin: '50% 100%' });
+  const P = (d, sw, extra) => { const e = document.createElementNS(SVGNS, 'path'); e.setAttribute('d', d); e.setAttribute('fill', 'none'); e.setAttribute('stroke', '#000');
+    e.setAttribute('stroke-width', sw); e.setAttribute('stroke-linecap', 'round'); e.setAttribute('stroke-linejoin', 'round'); if (extra) for (const k in extra) e.setAttribute(k, extra[k]); svg.appendChild(e); return e; };
+  const big = bw >= 40, mid = bw >= 24;     // tiny blocks: grid only, so the drawing never turns into a grey moire
+  let d = '';
+  // cast shadow on the floor: short hatch lines to the right of the block
+  for (let k = 0; k < 9; k++) { const sx = fw + ox * .2 + k * 7; d += `M${sx} ${H} l${10} ${-8}`; }
+  P(d, 1.2); d = '';
+  // faces filled white so nothing shows through
+  P(`M0 ${oy}h${fw}v${fh}h${-fw}z M0 ${oy}L${ox} 0h${fw}L${fw} ${oy}z M${fw} ${oy}L${fw + ox} 0v${fh}L${fw} ${H}z`, 0, { fill: '#fff' });
+  // right side in shadow: diagonal hatching clipped to the face
+  const cid = 'c' + Math.random().toString(36).slice(2, 8);
+  const cp = document.createElementNS(SVGNS, 'clipPath'); cp.setAttribute('id', cid);
+  const cpp = document.createElementNS(SVGNS, 'path'); cpp.setAttribute('d', `M${fw} ${oy}L${fw + ox} 0v${fh}L${fw} ${H}z`); cp.appendChild(cpp); svg.appendChild(cp);
+  for (let k = -H; k < ox + H; k += 7) d += `M${fw + k} ${H + 4}L${fw + k + H} -4`;
+  P(d, .9, { 'clip-path': `url(#${cid})` }); d = '';
+  // grid of bundles: front (cols x layers), top (cols x rows), side (rows x layers)
+  for (let i = 1; i < cols; i++) d += `M${i * bw} ${oy}v${fh}M${i * bw} ${oy}l${ox} ${-oy}`;
+  for (let j = 1; j < layers; j++) d += `M0 ${oy + j * bh}h${fw}l${ox} ${-oy}`;
+  for (let r = 1; r < rows; r++) d += `M${r * dx} ${oy - r * dy}h${fw}v${fh}`;
+  P(d, mid ? 1.6 : 1.0); d = '';
+  if (mid) {      // paper edges: thin lines inside every bundle on the front
+    for (let j = 0; j < layers; j++) for (const f of (big ? [.3, .55, .8] : [.5])) d += `M${bw * .04} ${oy + (j + f) * bh}H${fw - bw * .04}`;
+    P(d, .7); d = '';
+    // the band around every bundle: a black stripe on the front, a line over the top
+    for (let i = 0; i < cols; i++) { const bx = (i + .5) * bw, b = Math.max(2, bw * .09); d += `M${bx - b / 2} ${oy}h${b}v${fh}h${-b}z`; }
+    P(d, 0, { fill: '#000' }); d = '';
+    for (let i = 0; i < cols; i++) { const bx = (i + .5) * bw; d += `M${bx} ${oy}l${ox} ${-oy}`; }
+    P(d, Math.max(1.2, bw * .06)); d = '';
+  }
+  if (big) {      // the top note of each bundle: an inner frame and the value
+    for (let i = 0; i < cols; i++) for (let r = 0; r < rows; r++) {
+      const px = i * bw + r * dx, py = oy - r * dy;
+      d += `M${px + bw * .12 + dx * .2} ${py - dy * .2}h${bw * .76}l${dx * .6} ${-dy * .6}h${-bw * .76}z`;
+    }
+    P(d, .8);
+  }
+  // heavy outline last: this is the line that draws itself
+  const outline = P(`M0 ${oy}L${ox} 0h${fw}v${fh}L${fw} ${H}H0z M0 ${oy}h${fw}l${ox} ${-oy} M${fw} ${oy}v${fh}`, mid ? 3.2 : 2.6);
+  outline.setAttribute('pathLength', '1'); outline.style.strokeDasharray = '1 1'; outline.style.strokeDashoffset = '1';
+  stage.appendChild(svg);
+  return { el: svg, cx: x + W / 2, top, outline };
+}
 function Amount(stage, cx, stackTop) {
   const el = document.createElement('div'); el.className = 'amount';
-  const y = Math.min(stackTop - 230, SPEC.finn_space ? 430 : 680);
+  const y = Math.max(SPEC.style === 'bw' ? 195 : -999, Math.min(stackTop - 230, SPEC.finn_space ? 430 : 680));   // never above the progress dots
   Object.assign(el.style, { left: (cx - 420) + 'px', width: '840px', top: y + 'px' });
   const lead = document.createElement('div'); lead.className = 'lead';
   Object.assign(lead.style, { left: (cx - 1.5) + 'px', top: (y + 118) + 'px', height: (stackTop + 22 - (y + 118)) + 'px', transformOrigin: '50% 0' });
@@ -135,13 +200,14 @@ SPEC.stages.forEach((s, i) => {
   const stage = document.createElement('div'); stage.className = 'stage'; stage.style.left = (i * STAGE_W) + 'px'; world.appendChild(stage);
   const floor = document.createElement('div'); floor.className = 'floor'; floor.style.top = FLOOR + 'px'; stage.appendChild(floor);
   const Ki = s.scale || K;
-  const person = Person(stage, 'person_' + s.person, Ki, s.mirror);
-  const stack = Stack(stage, 'stack_' + s.stack, Ki, s.grid);
+  const person = Person(stage, 'person_' + s.person + (BW ? '_bw' : ''), Ki, s.mirror);
+  const stack = BW && s.block ? LineStack(stage, s.block, Ki) : Stack(stage, 'stack_' + s.stack, Ki, s.grid);
   const amt = Amount(stage, stack.cx, stack.top);
   const card = SkillCard(stage, s);
   const t0 = SPEC.starts ? SPEC.starts[i] : T0 + i * D;          // optional: stage starts laid onto the voice
+  if (stack.outline) tl.to(stack.outline, { strokeDashoffset: 0, duration: (s.count_seconds || 1.0) + .2, ease: 'power2.inOut' }, t0 + .45);   // the outline draws itself
   if (i > 0) tl.to(world, { x: -i * STAGE_W, duration: 1.15, ease: 'power2.inOut' }, t0 - .35);   // camera moves left to the next stage
-  tl.to(dotEls[i], { backgroundColor: '#1c2b4a', scale: 1.25, duration: .3 }, t0 + .2);
+  tl.to(dotEls[i], { backgroundColor: BW ? '#000' : '#1c2b4a', scale: 1.25, duration: .3 }, t0 + .2);
   tl.to(person, { autoAlpha: 1, y: 0, duration: .55, ease: 'power3.out' }, t0 + .25);
   // the stack builds up from the floor, then settles
   tl.fromTo(stack.el, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: s.count_seconds || 1.0, ease: 'power3.out' }, t0 + .55);   // grows in step with the counter

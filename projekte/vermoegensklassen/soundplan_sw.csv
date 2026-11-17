@@ -1,0 +1,63 @@
+zeit_s;sound;lautstaerke;ereignis
+0.05;pop_mid;0.55;Titel erscheint
+0.50;click_tiny;0.50;Frage erscheint
+7.21;whoosh_soft;0.50;Titel geht, Stufe 1 kommt
+7.96;pop_soft;0.55;Person 1 erscheint
+8.26;paper_riffle;0.45;Stapel wächst
+8.46;click_tiny;0.50;Hinweislinie
+8.71;pop_deep;0.55;Stapel setzt auf (100.000 €)
+9.06;pop_mid;0.60;Skill-Karte „MASS AFFLUENT“
+9.31;click_tiny;0.45;Kartenzeile „Wohlhabend“
+9.31;tick_soft;0.50;Zähler am Ziel
+9.43;click_tiny;0.45;Kartenzeile „100.000 € bis unter 1 Mio. €“
+12.73;whoosh_soft;0.55;Kamera fährt zu Stufe 2
+13.33;pop_soft;0.55;Person 2 erscheint
+13.63;paper_riffle;0.52;Stapel wächst
+13.83;click_tiny;0.50;Hinweislinie
+14.08;pop_deep;0.63;Stapel setzt auf (1.000.000 €)
+14.43;pop_mid;0.60;Skill-Karte „HNWI“
+14.68;click_tiny;0.45;Kartenzeile „High-Net-Worth Individual“
+14.68;tick_soft;0.50;Zähler am Ziel
+14.80;click_tiny;0.45;Kartenzeile „1 Mio. € bis unter 5 Mio. €“
+17.94;whoosh_soft;0.55;Kamera fährt zu Stufe 3
+18.54;pop_soft;0.55;Person 3 erscheint
+18.84;paper_riffle_long;0.59;Stapel wächst
+19.04;click_tiny;0.50;Hinweislinie
+19.29;pop_deep;0.71;Stapel setzt auf (5.000.000 €)
+19.64;pop_mid;0.60;Skill-Karte „VHNWI“
+19.89;click_tiny;0.45;Kartenzeile „Very-High-Net-Worth Individual“
+19.89;tick_soft;0.50;Zähler am Ziel
+20.01;click_tiny;0.45;Kartenzeile „5 Mio. € bis unter 30 Mio. €“
+21.40;whoosh_soft;0.55;Kamera fährt zu Stufe 4
+22.00;pop_soft;0.55;Person 4 erscheint
+22.30;paper_riffle_long;0.66;Stapel wächst
+22.50;click_tiny;0.50;Hinweislinie
+22.75;bass_soft;0.62;tiefer Bass (UHNWI)
+22.75;pop_deep;0.79;Stapel setzt auf (30.000.000 €)
+23.10;pop_mid;0.60;Skill-Karte „UHNWI“
+23.35;click_tiny;0.45;Kartenzeile „Ultra-High-Net-Worth Individual“
+23.35;tick_soft;0.50;Zähler am Ziel
+23.47;click_tiny;0.45;Kartenzeile „30 Mio. € bis unter 100 Mio. €“
+25.74;whoosh_soft;0.55;Kamera fährt zu Stufe 5
+26.34;pop_soft;0.55;Person 1 erscheint
+26.64;paper_riffle_long;0.73;Stapel wächst
+26.84;click_tiny;0.50;Hinweislinie
+27.09;bass_soft;0.68;tiefer Bass (CENTIMILLIONAIRE)
+27.18;pop_deep;0.87;Stapel setzt auf (100.000.000 €)
+27.44;pop_mid;0.60;Skill-Karte „CENTIMILLIONAIRE“
+27.69;click_tiny;0.45;Kartenzeile „Mindestens 100 Millionen €“
+27.81;click_tiny;0.45;Kartenzeile „100 Mio. € bis unter 1 Mrd. €“
+27.89;tick_soft;0.50;Zähler am Ziel
+30.38;whoosh_soft;0.55;Kamera fährt zu Stufe 6
+30.98;pop_soft;0.55;Person 3 erscheint
+31.28;paper_riffle_long;0.80;Stapel wächst
+31.48;click_tiny;0.50;Hinweislinie
+31.73;bass_soft;0.85;tiefer Bass (BILLIONAIRE)
+31.78;shimmer;0.80;Milliarde: edler Klang
+32.00;pop_deep;0.95;Stapel setzt auf (1.000.000.000 €)
+32.08;pop_mid;0.60;Skill-Karte „BILLIONAIRE“
+32.33;click_tiny;0.45;Kartenzeile „Milliardär“
+32.45;click_tiny;0.45;Kartenzeile „ab 1 Mrd. €“
+32.88;pop_deep;0.90;Milliarde erreicht
+32.93;tick_soft;0.50;Zähler am Ziel
+36.57;pop_mid;0.55;Schlusssatz: Nettovermögen ≠ Bargeld

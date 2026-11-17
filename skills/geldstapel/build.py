@@ -20,7 +20,7 @@ STAGES = [
 ]
 DEFAULTS = {'stages': STAGES, 'scale': 1.35, 'stage_seconds': 3.4,
             'note': 'Beispielhafte Einordnung – keine Garantie für Einkommen oder Vermögen.',
-            'starts': None, 'end': None, 'intro': None, 'outro': None, 'finn_space': False}   # optional: stage start times and end, laid onto a voice-over
+            'starts': None, 'end': None, 'intro': None, 'outro': None, 'finn_space': False, 'style': 'color'}   # optional: stage start times and end, laid onto a voice-over
 
 
 def duration(spec):
@@ -33,9 +33,8 @@ def check(spec):
     if not 1 <= len(spec['stages']) <= 6:
         sys.exit('spec: "stages" takes 1 to 6 stages')
     for s in spec['stages']:
-        for k in ('person', 'stack'):
-            if not (HERE / 'assets' / f'{k}_{s[k]}.png').exists():
-                sys.exit(f'spec: assets/{k}_{s[k]}.png is missing')
+        if not (HERE / 'assets' / f'person_{s["person"]}.png').exists():
+            sys.exit(f'spec: assets/person_{s["person"]}.png is missing')
         if len(' · '.join(s.get('skills', []))) > 44:
             print(f'note: the skills of "{s["title"]}" are long and may not fit the card')
 
@@ -46,7 +45,10 @@ def inline_assets(work_dir):
     assets = {}
     for f in sorted((HERE / 'assets').glob('*.png')):
         w, h = Image.open(f).size
-        assets[f.stem] = f'data:image/png;w={w};h={h};base64,' + base64.b64encode(f.read_bytes()).decode()
+        key = f.stem
+        if '@' in key:                       # person_1_bw@3x.png: stored at 3x, shown at 1x size
+            key, mult = key.split('@'); k = int(mult.rstrip('x')); w, h = w // k, h // k
+        assets[key] = f'data:image/png;w={w};h={h};base64,' + base64.b64encode(f.read_bytes()).decode()
     page = (HERE / 'template.html').read_text().replace('__ASSETS__', json.dumps(assets))
     work_dir.mkdir(parents=True, exist_ok=True)
     out = work_dir / 'geldstapel.template.html'
